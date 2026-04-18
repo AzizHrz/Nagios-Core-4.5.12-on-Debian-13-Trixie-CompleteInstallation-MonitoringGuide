@@ -1,4 +1,4 @@
-# 🖥 Nagios Core 4.5.12 — Guide d'installation sur Debian 13.4 (Trixie)
+# Nagios Core 4.5.12 — Guide d'installation sur Debian 13.4 (Trixie)
 
 > Guide complet basé sur le cours OpenClassrooms  
 > **"Mettez en place un outil de supervision de production avec Nagios"**  
@@ -91,12 +91,12 @@ sudo bash scripts/04-configure-nagios.sh
 
 | Problème | Debian 9 | Debian 13 |
 |---|---|---|
-| `php-imap` | Disponible directement | ❌ Nécessite le dépôt **Sury** → `php8.4-imap` |
-| `php-mcrypt` | Disponible | ❌ **Obsolète**, à supprimer de la commande |
-| `usermod` sans sudo | Fonctionnait | ❌ Nécessite `sudo` explicite |
-| SSL headers | Inclus | ❌ Nécessite `libssl-dev` séparé |
-| Kerberos | Optionnel | ⚠️ Warning lors du `./configure` (ignorable) |
-| `make install` | En tant que nagios | ❌ Doit être fait avec `sudo` (primaryos) |
+| `php-imap` | Disponible directement | Nécessite le dépôt **Sury** → `php8.4-imap` |
+| `php-mcrypt` | Disponible | **Obsolète**, à supprimer de la commande |
+| `usermod` sans sudo | Fonctionnait |  Nécessite `sudo` explicite |
+| SSL headers | Inclus |  Nécessite `libssl-dev` séparé |
+| Kerberos | Optionnel |  Warning lors du `./configure` (ignorable) |
+| `make install` | En tant que nagios |  Doit être fait avec `sudo` (primaryos) |
 
 ---
 
