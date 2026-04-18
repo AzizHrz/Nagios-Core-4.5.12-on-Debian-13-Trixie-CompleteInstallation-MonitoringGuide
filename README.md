@@ -69,7 +69,7 @@ Il corrige et adapte le cours OpenClassrooms original (écrit pour Debian 9) aux
 
 ```bash
 # Cloner le repo
-git clone https://github.com/[votre-user]/nagios-debian13-guide.git
+git clone https://github.com/AzizHrz/Nagios-Core-4.5.12-on-Debian-13-Trixie-CompleteInstallation-MonitoringGuide.git
 cd nagios-debian13-guide
 
 # Étape 1 — Préparer le serveur
