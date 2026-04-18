@@ -385,3 +385,279 @@ sudo tar -zxvf nagios-plugins-2.5.tar.gz  # avec sudo
 | `chown`, `chmod` | `sudo` (primaryos) |
 | `cd` | **jamais** avec sudo |
 | `echo >>` | via `tee -a` avec sudo |
+
+---
+
+## 🛠️ Le rôle essentiel de testNagios et restartNagios
+
+### Setup des alias (dans ~/.bashrc de primaryos)
+
+```bash
+echo "alias testNagios='sudo /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg'" >> ~/.bashrc
+echo "alias restartNagios='sudo systemctl restart nagios'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+### testNagios — La règle d'or
+
+> **TOUJOURS lancer `testNagios` avant `restartNagios`**
+> après chaque modification d'un fichier de configuration.
+
+```
+Modifier un fichier .cfg
+        ↓
+    testNagios          ← vérifie la syntaxe SANS toucher au service
+        ↓
+  Errors: 0 ?
+   ↙         ↘
+OUI           NON
+  ↓             ↓
+restartNagios  Corriger l'erreur
+               → retour à testNagios
+```
+
+Si tu fais `restartNagios` sans `testNagios` et qu'il y a une erreur de syntaxe,
+**Nagios ne redémarre pas** et ton monitoring s'arrête complètement.
+
+---
+
+### ❌ Exemple réel — Erreur de syntaxe détectée par testNagios
+
+Depuis nos screenshots, voici ce qui se passe quand tu fais une erreur :
+
+**Erreur commise** : on a référencé `check-ssh-localhost` dans un service
+sans le définir dans `commands.cfg`.
+
+**Output de testNagios** :
+
+```
+primaryos@ninja:/usr/local/nagios/etc/objects$ testNagios
+
+Nagios Core 4.5.12
+...
+Reading configuration data...
+   Read main config file okay...
+   Read object config files okay...
+
+Running pre-flight check on configuration data...
+
+Checking objects...
+Error: Service check command 'check-ssh-localhost' specified in service
+'SSH in Nagios Server' for host 'Nagios Server' not defined anywhere!
+        Checked 9 services.
+        Checked 2 hosts.
+        Checked 1 host groups.
+        Checked 0 service groups.
+        Checked 1 contacts.
+        Checked 1 contact groups.
+        Checked 25 commands.
+        Checked 5 time periods.
+        Checked 0 host escalations.
+        Checked 0 service escalations.
+Checking for circular paths...
+        Checked 2 hosts
+        Checked 0 service dependencies
+        Checked 0 host dependencies
+        Checked 5 timeperiods
+Checking global event handlers...
+Checking obsessive compulsive processor commands...
+Checking misc settings...
+
+Total Warnings: 0
+Total Errors:   1
+
+***> One or more problems was encountered while running the pre-flight check...
+```
+
+**Comment lire l'erreur** :
+
+```
+Error: Service check command 'check-ssh-localhost'   ← NOM de la command manquante
+       specified in service 'SSH in Nagios Server'   ← NOM du service qui l'utilise
+       for host 'Nagios Server'                      ← NOM de l'hôte concerné
+       not defined anywhere!                         ← CAUSE : command introuvable
+```
+
+**Fix** : ajouter dans `commands.cfg` :
+
+```cfg
+define command {
+    command_name    check-ssh-localhost
+    command_line    $USER1$/check_ssh localhost
+}
+```
+
+**Relancer testNagios** :
+
+```
+Total Warnings: 0
+Total Errors:   0
+Things look okay ✅
+```
+
+**Puis seulement** :
+
+```bash
+restartNagios
+```
+
+---
+
+### ✅ Output normal de testNagios (tout va bien)
+
+```
+Nagios Core 4.5.12
+...
+Checking objects...
+        Checked 9 services.
+        Checked 2 hosts.
+        Checked 1 host groups.
+        Checked 1 contacts.
+        Checked 25 commands.
+        Checked 5 time periods.
+
+Total Warnings: 0
+Total Errors:   0
+
+Things look okay - No serious problems were detected during the pre-flight check ✅
+```
+
+---
+
+### Autres erreurs de syntaxe courantes
+
+#### Missing closing brace `}`
+
+```
+Error: Could not add object property in file
+'/usr/local/nagios/etc/objects/localhost.cfg' on line 45.
+```
+
+**Cause** : tu as oublié de fermer un bloc `define service {` avec `}`
+
+#### Typo dans host_name
+
+```
+Error: Host 'Nagios Serveur' specified in service ... not defined anywhere!
+```
+
+**Cause** : `host_name` dans le service ne correspond pas exactement au `host_name`
+défini dans le host. Ici `Nagios Serveur` (avec u) au lieu de `Nagios Server`.
+
+#### define service sans `use` template
+
+```
+Warning: Service ... does not have contacts or contact groups defined!
+```
+
+**Cause** : le service n'utilise pas de template (`use local-service`) et n'a pas
+de `contacts` défini. Ajouter `use local-service` ou `contacts nagiosadmin`.
+
+---
+
+## ❌ Problème 14 — SSH connection refused lors du check
+
+### Symptôme
+
+```
+$ ./check_ssh localhost
+connect to address localhost and port 22: Connection refused
+```
+
+### Cause
+
+Le service SSH (`openssh-server`) n'est pas installé ou pas démarré.
+
+### Solution
+
+```bash
+sudo apt-get install openssh-server -y
+sudo systemctl start ssh
+sudo systemctl enable ssh
+
+# Vérifier
+sudo systemctl status ssh
+# Active: active (running) ✅
+
+# Retester
+./check_ssh localhost
+# SSH OK - OpenSSH_10.0p2 ✅
+```
+
+---
+
+## ❌ Problème 15 — check_ping CRITICAL avec domaines (IPv6)
+
+### Symptôme
+
+```
+./check_ping -H google.com -w 100.0,20% -c 500.0,60%
+CRITICAL - Network Unreachable (google.com)
+
+# Mais avec IP directe ça marche :
+./check_ping -H 142.251.142.78 -w 100.0,20% -c 500.0,60%
+PING OK ✅
+
+# Et avec -4 ça marche :
+./check_ping -H google.com -w 100.0,20% -c 500.0,60% -4
+PING OK ✅
+```
+
+### Cause
+
+Le hotspot (iPhone ou autre) ne supporte pas IPv6. `check_ping` essaie IPv6 en premier
+et échoue. DNS fonctionne mais le ping IPv6 est bloqué.
+
+### Solution — Ajouter `-4` dans commands.cfg
+
+```bash
+sudo nano /usr/local/nagios/etc/objects/commands.cfg
+```
+
+```cfg
+# check_ping
+command_line    $USER1$/check_ping -H $HOSTADDRESS$ -w $ARG1$ -c $ARG2$ -4
+
+# check-host-alive
+command_line    $USER1$/check_ping -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5 -4
+```
+
+```bash
+testNagios && restartNagios
+```
+
+---
+
+## ❌ Problème 16 — DNS résolu mais check_ping échoue
+
+### Symptôme
+
+```
+ping google.com       → ✅ works
+nslookup google.com   → ✅ resolves
+./check_ping google.com → ❌ CRITICAL
+```
+
+### Cause
+
+NetworkManager écrase `/etc/resolv.conf` au redémarrage. Le DNS configuré
+manuellement est perdu.
+
+### Solution permanente via nmcli
+
+```bash
+# Trouver la connexion active
+nmcli connection show
+# Exemple : Aziz_s_iPhone (wifi hotspot)
+
+sudo nmcli connection modify "Aziz_s_iPhone" ipv4.dns "8.8.8.8 8.8.4.4"
+sudo nmcli connection modify "Aziz_s_iPhone" ipv4.ignore-auto-dns yes
+sudo nmcli connection down "Aziz_s_iPhone"
+sudo nmcli connection up "Aziz_s_iPhone"
+
+# Vérifier
+cat /etc/resolv.conf
+# nameserver 8.8.8.8 ✅
+```

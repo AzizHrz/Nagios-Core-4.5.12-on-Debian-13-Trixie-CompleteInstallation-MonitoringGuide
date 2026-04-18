@@ -17,6 +17,7 @@
   - [Partie 2 — Compilation et installation Nagios Core](docs/02-installation-nagios-core.md)
   - [Partie 3 — Installation des plugins](docs/03-installation-plugins.md)
   - [Partie 4 — Configuration et interface web](docs/04-configuration-interface.md)
+  - [Partie 5 — Les 4 éléments essentiels : Plugin, Command, Host, Service](docs/05-nagios-core-concepts.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 - [Différences Debian 9 vs Debian 13](#-différences-debian-9-vs-debian-13)
 - [Prochaines étapes](#-prochaines-étapes)
@@ -96,6 +97,23 @@ sudo bash scripts/04-configure-nagios.sh
 | SSL headers | Inclus | ❌ Nécessite `libssl-dev` séparé |
 | Kerberos | Optionnel | ⚠️ Warning lors du `./configure` (ignorable) |
 | `make install` | En tant que nagios | ❌ Doit être fait avec `sudo` (primaryos) |
+
+---
+
+## 🔌 Plugins documentés
+
+### Standards (inclus dans nagios-plugins-2.5)
+`check_ping` `check_http` `check_ssh` `check_disk` `check_load` `check_users` `check_procs` `check_swap` `check_tcp` `check_udp` `check_dns` `check_smtp` `check_ntp_time` `check_ssl_validity` `check_uptime` `check_by_ssh`
+
+### Optionnels (prérequis supplémentaires)
+`check_mysql` `check_pgsql` `check_ldap` `check_disk_smb` `check_snmp`
+
+```bash
+# MySQL seulement
+sudo bash scripts/03-install-plugins.sh --with-mysql
+# Tout installer
+sudo bash scripts/03-install-plugins.sh --with-all
+```
 
 ---
 
