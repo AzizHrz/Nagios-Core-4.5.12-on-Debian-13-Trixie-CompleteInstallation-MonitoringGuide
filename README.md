@@ -1,4 +1,4 @@
-# 🖥️ Nagios Core 4.5.12 — Guide d'installation sur Debian 13.4 (Trixie)
+# 🖥 Nagios Core 4.5.12 — Guide d'installation sur Debian 13.4 (Trixie)
 
 > Guide complet basé sur le cours OpenClassrooms  
 > **"Mettez en place un outil de supervision de production avec Nagios"**  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📋 Table des matières
+##  Table des matières
 
 - [À propos](#-à-propos)
 - [Prérequis](#-prérequis)
@@ -24,7 +24,7 @@
 
 ---
 
-## 📖 À propos
+##  À propos
 
 Ce guide documente une installation **réelle**, réalisée en avril 2026 sur **Debian 13.4 Trixie (bare metal)**.
 
@@ -39,7 +39,7 @@ Il corrige et adapte le cours OpenClassrooms original (écrit pour Debian 9) aux
 
 ---
 
-## ⚙️ Prérequis
+##  Prérequis
 
 - Machine physique ou VM sous **Debian 13.4**
 - Accès **sudo** sur la machine
@@ -48,7 +48,7 @@ Il corrige et adapte le cours OpenClassrooms original (écrit pour Debian 9) aux
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 [Debian 13.4 — Nagios Core 4.5.12]
@@ -65,7 +65,7 @@ Il corrige et adapte le cours OpenClassrooms original (écrit pour Debian 9) aux
 
 ---
 
-## 🚀 Installation rapide (scripts)
+##  Installation rapide (scripts)
 
 ```bash
 # Cloner le repo
@@ -87,7 +87,7 @@ sudo bash scripts/04-configure-nagios.sh
 
 ---
 
-## 🔄 Différences Debian 9 vs Debian 13
+##  Différences Debian 9 vs Debian 13
 
 | Problème | Debian 9 | Debian 13 |
 |---|---|---|
@@ -100,7 +100,7 @@ sudo bash scripts/04-configure-nagios.sh
 
 ---
 
-## 🔌 Plugins documentés
+##  Plugins documentés
 
 ### Standards (inclus dans nagios-plugins-2.5)
 `check_ping` `check_http` `check_ssh` `check_disk` `check_load` `check_users` `check_procs` `check_swap` `check_tcp` `check_udp` `check_dns` `check_smtp` `check_ntp_time` `check_ssl_validity` `check_uptime` `check_by_ssh`
@@ -117,7 +117,7 @@ sudo bash scripts/03-install-plugins.sh --with-all
 
 ---
 
-## 🔭 Prochaines étapes
+##  Prochaines étapes
 
 - [ ] Installation des plugins Nagios 2.5 *(en cours)*
 - [ ] Configuration NRPE pour monitoring distant
@@ -127,7 +127,7 @@ sudo bash scripts/03-install-plugins.sh --with-all
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 - [Cours OpenClassrooms](https://openclassrooms.com/fr/courses/2035786-mettez-en-place-un-outil-de-supervision-de-production-avec-nagios)
 - [Nagios Core officiel](https://www.nagios.org/projects/nagios-core/)
