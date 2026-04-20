@@ -20,7 +20,7 @@
 
 **All 9 services green — 2 hosts monitored :**
 
-![Final result all services OK](screenshots/s30-all-services-ok-final.png)
+![Final result all services OK](screenshots/s25-all-services-ok-9services.png)
 
 **SSH service detail on Nagios Server :**
 
