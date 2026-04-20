@@ -16,7 +16,7 @@
 
 ---
 
-## 🖥️ Final Result
+## Final Result
 
 **All 9 services green — 2 hosts monitored :**
 
@@ -28,7 +28,7 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Prerequisites](#-prerequisites)
 - [Architecture](#-architecture)
@@ -45,7 +45,7 @@
 
 ---
 
-## ⚙️ Prerequisites
+## Prerequisites
 
 - Machine running **Debian 13.4 Trixie** (bare metal or VM)
 - **sudo** access
@@ -54,7 +54,7 @@
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 [Debian 13.4 — Nagios Core 4.5.12]
@@ -70,7 +70,7 @@
 
 ---
 
-## 🚀 Quick Install
+## Quick Install
 
 ```bash
 git clone https://github.com/[your-user]/nagios-debian13-guide.git
@@ -83,7 +83,7 @@ sudo bash scripts/04-configure-nagios.sh
 
 ---
 
-## 📖 Part 1 — Server Preparation
+## Part 1 — Server Preparation
 
 > Full guide → [docs/01-preparation-serveur.md](docs/01-preparation-serveur.md)
 
@@ -135,7 +135,7 @@ Fix with `chown`:
 
 ---
 
-## 📖 Part 2 — Nagios Core Compilation & Install
+## Part 2 — Nagios Core Compilation & Install
 
 > Full guide → [docs/02-installation-nagios-core.md](docs/02-installation-nagios-core.md)
 
@@ -176,7 +176,7 @@ Running from primaryos with sudo — files installed to `/usr/local/nagios/`:
 
 ---
 
-## 📖 Part 3 — Plugins Installation
+## Part 3 — Plugins Installation
 
 > Full guide → [docs/03-installation-plugins.md](docs/03-installation-plugins.md)
 
@@ -208,7 +208,7 @@ Complete list of all installed plugins:
 
 ---
 
-## 📖 Part 4 — Web Interface
+## Part 4 — Web Interface
 
 > Full guide → [docs/04-configuration-interface.md](docs/04-configuration-interface.md)
 
@@ -239,7 +239,7 @@ Later alert history showing the transition from red errors to green OK:
 
 ---
 
-## 📖 Part 5 — Plugin, Command, Host, Service
+## Part 5 — Plugin, Command, Host, Service
 
 > Full guide → [docs/05-nagios-core-concepts.md](docs/05-nagios-core-concepts.md)
 
@@ -295,14 +295,14 @@ Installing `openssh-server`, starting the service, and verifying with `check_ssh
 
 ![SSH install start and check_ssh test](screenshots/s26-ssh-install-test-plugin.png)
 
-### ❌ testNagios — syntax error: command not defined
+###  testNagios — syntax error: command not defined
 
 `testNagios` catches the error before restarting Nagios.
 `check-ssh-localhost` is referenced in a service but not yet defined in `commands.cfg`:
 
 ![testNagios error command not defined](screenshots/s29-testNagios-error-command-not-defined.png)
 
-### ✅ testNagios — all OK after fix
+###  testNagios — all OK after fix
 
 After adding `check-ssh-localhost` to `commands.cfg`, `testNagios` shows 0 errors:
 
@@ -316,7 +316,7 @@ Both hosts up, all 9 services OK including SSH in Nagios Server:
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 > Full guide (16 problems documented) → [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
 
@@ -330,22 +330,22 @@ Fix: add `-4` to force IPv4:
 
 ---
 
-## 🔄 Debian 9 vs Debian 13 Key Differences
+##  Debian 9 vs Debian 13 Key Differences
 
 | Problem | Debian 9 | Debian 13 |
 |---|---|---|
-| `php-imap` | Available directly | ❌ Needs **Sury repo** → `php8.4-imap` |
-| `php-mcrypt` | Available | ❌ Obsolete — remove from command |
-| SSL headers | Included | ❌ Requires `libssl-dev` separately |
-| Kerberos warning | None | ⚠️ Warning in `./configure` (ignorable) |
-| `make install` | As nagios user | ❌ Must use `sudo` from primaryos |
-| IPv6 | Not an issue | ⚠️ Hotspot blocks IPv6 → add `-4` |
-| `usermod` | Without sudo | ❌ Requires explicit `sudo` |
-| `.bashrc` for nagios | Works | ❌ nagios uses `sh` — use primaryos `~/.bashrc` |
+| `php-imap` | Available directly |  Needs **Sury repo** → `php8.4-imap` |
+| `php-mcrypt` | Available |  Obsolete — remove from command |
+| SSL headers | Included |  Requires `libssl-dev` separately |
+| Kerberos warning | None | Warning in `./configure` (ignorable) |
+| `make install` | As nagios user |  Must use `sudo` from primaryos |
+| IPv6 | Not an issue | Hotspot blocks IPv6 → add `-4` |
+| `usermod` | Without sudo | Requires explicit `sudo` |
+| `.bashrc` for nagios | Works | nagios uses `sh` — use primaryos `~/.bashrc` |
 
 ---
 
-## 🔌 Plugins Reference
+## Plugins Reference
 
 ### Standard (no extra prerequisites)
 
@@ -378,14 +378,14 @@ sudo bash scripts/03-install-plugins.sh --with-all     # everything
 
 ---
 
-## 🔭 Next Steps
+##  Next Steps
 
-- [x] Nagios Core 4.5.12 installation ✅
-- [x] Standard plugins 2.5 ✅
-- [x] Plugin, Command, Host, Service documented ✅
-- [x] Nagios Server as host + SSH service ✅
-- [x] IPv6 hotspot fix ✅
-- [x] testNagios & restartNagios workflow ✅
+- [x] Nagios Core 4.5.12 installation 
+- [x] Standard plugins 2.5 
+- [x] Plugin, Command, Host, Service documented 
+- [x] Nagios Server as host + SSH service 
+- [x] IPv6 hotspot fix 
+- [x] testNagios & restartNagios workflow 
 - [ ] NRPE — monitor remote machines
 - [ ] Monitor Kali Linux VM on VirtualBox
 - [ ] Security tools (Fail2ban, Wazuh)
@@ -393,7 +393,7 @@ sudo bash scripts/03-install-plugins.sh --with-all     # everything
 
 ---
 
-## 📚 Resources
+##  Resources
 
 - [OpenClassrooms Course](https://openclassrooms.com/fr/courses/2035786-mettez-en-place-un-outil-de-supervision-de-production-avec-nagios)
 - [Nagios Core Official](https://www.nagios.org/projects/nagios-core/)

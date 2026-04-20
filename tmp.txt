@@ -7,3 +7,4 @@ s16 !!!!
 s22-nagios-web-localhost-cfg-host.png
 
 
+s30-all-services-ok-final.png
